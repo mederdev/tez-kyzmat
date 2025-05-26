@@ -1,5 +1,6 @@
+
 import { useState } from "react";
-import { Search, Phone, MapPin, Truck, Tractor } from "lucide-react";
+import { Search, Phone, MapPin, Truck, MessageCircle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,20 @@ const Index = () => {
     { id: "water", name: "Суу ташыгычтар", icon: "💧" }
   ];
 
+  // Области Кыргызстана
+  const kyrgyzstanRegions = [
+    { id: "all", name: "Бардык аймактар", emoji: "🇰🇬" },
+    { id: "bishkek", name: "Бишкек шаары", emoji: "🏙️" },
+    { id: "osh", name: "Ош шаары", emoji: "🏛️" },
+    { id: "chui", name: "Чүй областы", emoji: "🌾" },
+    { id: "issyk-kul", name: "Ысык-Көл областы", emoji: "🏔️" },
+    { id: "naryn", name: "Нарын областы", emoji: "⛰️" },
+    { id: "talas", name: "Талас областы", emoji: "🌿" },
+    { id: "jalal-abad", name: "Жалал-Абад областы", emoji: "🌸" },
+    { id: "osh-region", name: "Ош областы", emoji: "🍇" },
+    { id: "batken", name: "Баткен областы", emoji: "🌵" }
+  ];
+
   const services = [
     // Unloading Equipment
     {
@@ -27,8 +42,10 @@ const Index = () => {
       name: "Жүк ташыгычтар",
       category: "unloading",
       description: "Товарларды түшүрүү үчүн кесипкөй жүк ташыгычтар",
-      contact: "+996 (xxx) xxx-xx-xx",
-      location: "Борбордук айыл",
+      contact: "+996 (555) 123-456",
+      whatsapp: "+996555123456",
+      location: "bishkek",
+      locationName: "Бишкек шаары",
       price: "500 сомдон/саат",
       available: true
     },
@@ -37,8 +54,10 @@ const Index = () => {
       name: "Конвейер системасы",
       category: "unloading",
       description: "Сыпкыч материалдарды автоматтык түшүрүү",
-      contact: "+996 (xxx) xxx-xx-xx",
-      location: "Борбордук айыл",
+      contact: "+996 (777) 234-567",
+      whatsapp: "+996777234567",
+      location: "chui",
+      locationName: "Чүй областы",
       price: "2000 сомдон/саат",
       available: true
     },
@@ -47,8 +66,10 @@ const Index = () => {
       name: "Вилкалуу жүк көтөргүч",
       category: "unloading",
       description: "Паллеттерди жана оор жүктөрдү түшүрүү",
-      contact: "+996 (xxx) xxx-xx-xx",
-      location: "Түндүк айыл",
+      contact: "+996 (502) 345-678",
+      whatsapp: "+996502345678",
+      location: "osh",
+      locationName: "Ош шаары",
       price: "1500 сомдон/саат",
       available: false
     },
@@ -59,8 +80,10 @@ const Index = () => {
       name: "КПС-4 Культиватор",
       category: "tractors",
       description: "Топурак иштетүү, жумшартуу, эгүүгө даярдоо",
-      contact: "+996 (xxx) xxx-xx-xx",
-      location: "'Ниваа' фермер чарбасы",
+      contact: "+996 (312) 456-789",
+      whatsapp: "+996312456789",
+      location: "issyk-kul",
+      locationName: "Ысык-Көл областы",
       price: "3000 сомдон/га",
       available: true
     },
@@ -69,8 +92,10 @@ const Index = () => {
       name: "Пресс-түндүргүч",
       category: "tractors",
       description: "Чөптү топтоп, түйүндөргө ороо",
-      contact: "+996 (xxx) xxx-xx-xx",
-      location: "'АгроТех' ЖЧК",
+      contact: "+996 (550) 567-890",
+      whatsapp: "+996550567890",
+      location: "naryn",
+      locationName: "Нарын областы",
       price: "800 сомдон/га",
       available: true
     },
@@ -79,8 +104,10 @@ const Index = () => {
       name: "Айлануучу жер жыргагыч",
       category: "tractors",
       description: "Эгүү үчүн жерди жыргоо",
-      contact: "+996 (xxx) xxx-xx-xx",
-      location: "Иванов И.И. фермери",
+      contact: "+996 (703) 678-901",
+      whatsapp: "+996703678901",
+      location: "talas",
+      locationName: "Талас областы",
       price: "2500 сомдон/га",
       available: true
     },
@@ -89,8 +116,10 @@ const Index = () => {
       name: "Дан эгүүчү",
       category: "tractors",
       description: "Дан өсүмдүктөрүн эгүү",
-      contact: "+996 (xxx) xxx-xx-xx",
-      location: "'Түшүм' КФЧ",
+      contact: "+996 (755) 789-012",
+      whatsapp: "+996755789012",
+      location: "jalal-abad",
+      locationName: "Жалал-Абад областы",
       price: "1200 сомдон/га",
       available: false
     },
@@ -101,8 +130,10 @@ const Index = () => {
       name: "КамАЗ 65115 самосвал",
       category: "trucks",
       description: "Сыпкыч материалдар, кум, чакылташ ташуу",
-      contact: "+996 (xxx) xxx-xx-xx",
-      location: "Петров ЖИ",
+      contact: "+996 (220) 890-123",
+      whatsapp: "+996220890123",
+      location: "osh-region",
+      locationName: "Ош областы",
       price: "4000 сомдон/жол",
       available: true
     },
@@ -111,8 +142,10 @@ const Index = () => {
       name: "КамАЗ 4308 бортовой",
       category: "trucks",
       description: "Курулуш материалдары, жабдуулар ташуу",
-      contact: "+996 (xxx) xxx-xx-xx",
-      location: "'СтройТранс' ЖЧК",
+      contact: "+996 (990) 901-234",
+      whatsapp: "+996990901234",
+      location: "batken",
+      locationName: "Баткен областы",
       price: "3500 сомдон/жол",
       available: true
     },
@@ -123,8 +156,10 @@ const Index = () => {
       name: "7 м³ бетон аралаштыргыч",
       category: "concrete",
       description: "Даяр бетонду объектке жеткирүү",
-      contact: "+996 (xxx) xxx-xx-xx",
-      location: "'Монолит' бетон заводу",
+      contact: "+996 (312) 012-345",
+      whatsapp: "+996312012345",
+      location: "bishkek",
+      locationName: "Бишкек шаары",
       price: "5500 сомдон/м³",
       available: true
     },
@@ -133,8 +168,10 @@ const Index = () => {
       name: "9 м³ авто-бетон аралаштыргыч",
       category: "concrete",
       description: "Бетон даярдоо жана жеткирүү",
-      contact: "+996 (xxx) xxx-xx-xx",
-      location: "'БетонСтрой' ЖЧК",
+      contact: "+996 (777) 123-456",
+      whatsapp: "+996777123456",
+      location: "chui",
+      locationName: "Чүй областы",
       price: "6000 сомдон/м³",
       available: true
     },
@@ -145,8 +182,10 @@ const Index = () => {
       name: "КамАЗ суу ташыгыч 10 м³",
       category: "water",
       description: "Үй жана участка ичүүчү суу жеткирүү",
-      contact: "+996 (xxx) xxx-xx-xx",
-      location: "Сидоров ЖИ",
+      contact: "+996 (705) 234-567",
+      whatsapp: "+996705234567",
+      location: "issyk-kul",
+      locationName: "Ысык-Көл областы",
       price: "2500 сомдон/жол",
       available: true
     },
@@ -155,15 +194,14 @@ const Index = () => {
       name: "КамАЗ суу ташыгыч 15 м³",
       category: "water",
       description: "Чоң көлөмдөгү суу жеткирүү",
-      contact: "+996 (xxx) xxx-xx-xx",
-      location: "'Булак' суу камсыздоо",
+      contact: "+996 (550) 345-678",
+      whatsapp: "+996550345678",
+      location: "osh",
+      locationName: "Ош шаары",
       price: "3500 сомдон/жол",
       available: true
     }
   ];
-
-  // Extract unique locations for filter
-  const uniqueLocations = Array.from(new Set(services.map(service => service.location)));
 
   const filteredServices = services.filter(service => {
     const matchesSearch = service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -172,6 +210,11 @@ const Index = () => {
     const matchesLocation = selectedLocation === "all" || service.location === selectedLocation;
     return matchesSearch && matchesCategory && matchesLocation;
   });
+
+  const handleWhatsAppClick = (whatsappNumber: string, serviceName: string) => {
+    const message = encodeURIComponent(`Салам! Мен "${serviceName}" кызматы боюнча кызыккам. Кошумча маалымат бере аласызбы?`);
+    window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
@@ -183,12 +226,13 @@ const Index = () => {
               🚜 Айыл үчүн Техника жана Кызматтар
             </h1>
             <p className="text-xl text-gray-600">
-              Өз районуңуздан керектүү техника жана кызматтарды табыңыз
+              Кыргызстандын бардык аймактарынан керектүү техника жана кызматтарды табыңыз
             </p>
           </div>
 
-          {/* Search and Location Filter */}
-          <div className="max-w-2xl mx-auto space-y-4">
+          {/* Search and Filters */}
+          <div className="max-w-4xl mx-auto space-y-4">
+            {/* Search Bar */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
               <Input
@@ -201,17 +245,22 @@ const Index = () => {
             </div>
             
             {/* Location Filter */}
-            <div className="flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-gray-500" />
+            <div className="bg-white p-4 rounded-lg border shadow-sm">
+              <div className="flex items-center gap-3 mb-3">
+                <MapPin className="h-5 w-5 text-blue-600" />
+                <h3 className="text-lg font-semibold text-gray-800">Аймак боюнча издөө</h3>
+              </div>
               <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                <SelectTrigger className="w-[280px]">
-                  <SelectValue placeholder="Жерди тандаңыз" />
+                <SelectTrigger className="w-full h-12 text-base">
+                  <SelectValue placeholder="Аймакты тандаңыз" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Бардык жерлер</SelectItem>
-                  {uniqueLocations.map((location) => (
-                    <SelectItem key={location} value={location}>
-                      {location}
+                <SelectContent className="max-h-60">
+                  {kyrgyzstanRegions.map((region) => (
+                    <SelectItem key={region.id} value={region.id} className="text-base py-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">{region.emoji}</span>
+                        <span>{region.name}</span>
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -262,20 +311,32 @@ const Index = () => {
                 <div className="space-y-3">
                   <div className="flex items-center text-sm text-gray-600">
                     <MapPin className="h-4 w-4 mr-2 text-gray-400" />
-                    {service.location}
+                    {service.locationName}
                   </div>
                   
-                  <div className="flex items-center justify-between">
-                    <span className="text-lg font-semibold text-green-600">
-                      {service.price}
-                    </span>
+                  <div className="text-lg font-semibold text-green-600">
+                    {service.price}
+                  </div>
+
+                  {/* Contact Buttons */}
+                  <div className="flex gap-2">
                     <Button
                       size="sm"
-                      className="flex items-center gap-2"
+                      variant="outline"
+                      className="flex-1 flex items-center gap-2"
                       disabled={!service.available}
                     >
                       <Phone className="h-4 w-4" />
-                      Байланышуу
+                      Чалуу
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="flex-1 flex items-center gap-2 bg-green-600 hover:bg-green-700"
+                      disabled={!service.available}
+                      onClick={() => handleWhatsAppClick(service.whatsapp, service.name)}
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                      WhatsApp
                     </Button>
                   </div>
                   
