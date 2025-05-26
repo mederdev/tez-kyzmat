@@ -1,14 +1,15 @@
-
 import { useState } from "react";
 import { Search, Phone, MapPin, Truck, Tractor } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedLocation, setSelectedLocation] = useState("all");
 
   const categories = [
     { id: "all", name: "Бардык категориялар", icon: "🔧" },
@@ -161,11 +162,15 @@ const Index = () => {
     }
   ];
 
+  // Extract unique locations for filter
+  const uniqueLocations = Array.from(new Set(services.map(service => service.location)));
+
   const filteredServices = services.filter(service => {
     const matchesSearch = service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          service.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === "all" || service.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const matchesLocation = selectedLocation === "all" || service.location === selectedLocation;
+    return matchesSearch && matchesCategory && matchesLocation;
   });
 
   return (
@@ -182,16 +187,36 @@ const Index = () => {
             </p>
           </div>
 
-          {/* Search */}
-          <div className="max-w-md mx-auto relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-            <Input
-              type="text"
-              placeholder="Техника жана кызматтарды издөө..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 h-12 text-lg"
-            />
+          {/* Search and Location Filter */}
+          <div className="max-w-2xl mx-auto space-y-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <Input
+                type="text"
+                placeholder="Техника жана кызматтарды издөө..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 h-12 text-lg"
+              />
+            </div>
+            
+            {/* Location Filter */}
+            <div className="flex items-center gap-2">
+              <MapPin className="h-5 w-5 text-gray-500" />
+              <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                <SelectTrigger className="w-[280px]">
+                  <SelectValue placeholder="Жерди тандаңыз" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Бардык жерлер</SelectItem>
+                  {uniqueLocations.map((location) => (
+                    <SelectItem key={location} value={location}>
+                      {location}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
       </div>
