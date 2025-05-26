@@ -27,7 +27,7 @@ export function LocationFilter({
             <SelectValue placeholder="Аймакты тандаңыз" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Бардык аймактар</SelectItem>
+            <SelectItem value="all">Бардык аймактар</SelectItem>
             {locations.map((location) => (
               <SelectItem key={location.id} value={location.id}>
                 {location.name}
@@ -45,7 +45,7 @@ export function LocationFilter({
               <SelectValue placeholder="Районду тандаңыз" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Бардык райондор</SelectItem>
+              <SelectItem value="all">Бардык райондор</SelectItem>
               {selectedLocationData.districts.map((district) => (
                 <SelectItem key={district.id} value={district.id}>
                   {district.name}

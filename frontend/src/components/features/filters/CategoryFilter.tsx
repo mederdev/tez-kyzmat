@@ -7,7 +7,7 @@ interface CategoryFilterProps {
 }
 
 const categories = [
-  { id: '', name: 'Бардык категориялар' },
+  { id: 'all', name: 'Бардык категориялар' },
   { id: 'unloading', name: 'Жүк түшүрүү' },
   { id: 'trucks', name: 'Жүк ташуу' },
   { id: 'tractors', name: 'Трактор кызматтары' },
@@ -17,10 +17,10 @@ const categories = [
 
 export function CategoryFilter({ selectedCategory, onCategoryChange }: CategoryFilterProps) {
   return (
-    <div>
-      <Label htmlFor="category">Категория</Label>
+    <div className="flex flex-col w-full">
+      <Label htmlFor="category" className="mb-2">Категория</Label>
       <Select value={selectedCategory} onValueChange={onCategoryChange}>
-        <SelectTrigger>
+        <SelectTrigger className="w-full min-w-[200px]">
           <SelectValue placeholder="Категорияны тандаңыз" />
         </SelectTrigger>
         <SelectContent>

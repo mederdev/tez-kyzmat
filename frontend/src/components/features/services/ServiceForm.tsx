@@ -185,7 +185,7 @@ export const ServiceForm = ({ onSubmit, onCancel, isLoading = false }: ServiceFo
             {availableDistricts.length > 0 && (
               <div>
                 <Label htmlFor="district">Район</Label>
-                <Select value={selectedDistrict || ""} onValueChange={handleDistrictChange}>
+                <Select value={selectedDistrict || "all"} onValueChange={handleDistrictChange}>
                   <SelectTrigger className="mt-1">
                     <SelectValue placeholder="Районду тандаңыз" />
                   </SelectTrigger>
