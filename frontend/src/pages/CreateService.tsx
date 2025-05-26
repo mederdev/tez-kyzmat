@@ -4,10 +4,12 @@ import { ServiceForm } from "@/components/features/services/ServiceForm";
 import { ServiceFormData } from "@/types";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const CreateService = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const handleSubmit = async (data: ServiceFormData) => {
     setIsLoading(true);
@@ -20,13 +22,13 @@ const CreateService = () => {
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       // Показываем успешное сообщение
-      alert("Жарыя ийгиликтүү кошулду!");
+      alert(t('services.success'));
       
       // Перенаправляем на главную страницу
       navigate("/");
     } catch (error) {
       console.error("Error creating service:", error);
-      alert("Жарыя кошууда ката кетти. Кайра аракет кылыңыз.");
+      alert(t('services.error'));
     } finally {
       setIsLoading(false);
     }
@@ -47,15 +49,15 @@ const CreateService = () => {
             className="mb-4"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Башкы бетке кайтуу
+            {t('common.backToHome')}
           </Button>
           
           <div className="text-center">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Жаңы жарыя кошуу
+              {t('services.createNew')}
             </h1>
             <p className="text-lg text-gray-600">
-              Техника же кызматыңызды жарыялаңыз
+              {t('services.createDescription')}
             </p>
           </div>
         </div>

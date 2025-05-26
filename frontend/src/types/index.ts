@@ -53,7 +53,9 @@ export type LocationId =
   | "talas"
   | "jalal-abad"
   | "osh-region"
-  | "batken";
+  | "batken"
+  | "karakol"
+  | "tokmok";
 
 export type DistrictId = string;
 
@@ -93,6 +95,7 @@ export interface AdminStats {
   totalServices: number;
   totalCategories: number;
   servicesByCategory: Record<string, number>;
+  activeServices: number;
 }
 
 export interface FilterState {
@@ -107,3 +110,102 @@ export interface Location {
   name: string;
   districts: District[];
 }
+
+export type TranslationKey =
+  | 'common.appName'
+  | 'common.mainDescription'
+  | 'common.loading'
+  | 'common.addListing'
+  | 'common.admin'
+  | 'common.backToHome'
+  | 'common.search'
+  | 'common.searchPlaceholder'
+  | 'common.required'
+  | 'common.cancel'
+  | 'common.kyrgyz'
+  | 'common.russian'
+  | 'common.contact.title'
+  | 'common.contact.description'
+  | 'common.contact.addButton'
+  | 'common.contact.contactButton'
+  | 'filters.category'
+  | 'filters.location'
+  | 'filters.district'
+  | 'filters.selectCategory'
+  | 'filters.selectRegion'
+  | 'filters.selectDistrict'
+  | 'filters.allRegions'
+  | 'filters.allDistricts'
+  | 'categories.all'
+  | 'categories.unloading'
+  | 'categories.trucks'
+  | 'categories.tractors'
+  | 'categories.concrete'
+  | 'categories.water'
+  | 'locations.all'
+  | 'locations.bishkek'
+  | 'locations.osh'
+  | 'locations.chui'
+  | 'locations.issyk-kul'
+  | 'locations.naryn'
+  | 'locations.talas'
+  | 'locations.jalal-abad'
+  | 'locations.osh-region'
+  | 'locations.batken'
+  | 'locations.karakol'
+  | 'locations.tokmok'
+  | 'services.createNew'
+  | 'services.createDescription'
+  | 'services.success'
+  | 'services.error'
+  | 'services.noResults'
+  | 'services.tryDifferentFilters'
+  | 'services.card.available'
+  | 'services.card.unavailable'
+  | 'services.card.contact'
+  | 'services.card.whatsapp'
+  | 'services.card.whatsappMessage'
+  | 'services.card.moreImages'
+  | 'services.card.contactInfo'
+  | 'services.card.call'
+  | 'services.form.title'
+  | 'services.form.name'
+  | 'services.form.namePlaceholder'
+  | 'services.form.description'
+  | 'services.form.descriptionPlaceholder'
+  | 'services.form.category'
+  | 'services.form.price'
+  | 'services.form.pricePlaceholder'
+  | 'services.form.ownerName'
+  | 'services.form.ownerNamePlaceholder'
+  | 'services.form.contact'
+  | 'services.form.contactPlaceholder'
+  | 'services.form.whatsapp'
+  | 'services.form.whatsappPlaceholder'
+  | 'services.form.images'
+  | 'services.form.addImages'
+  | 'services.form.maxImages'
+  | 'services.form.submit'
+  | 'admin.title'
+  | 'admin.statsError'
+  | 'admin.servicesError'
+  | 'admin.stats.unavailable'
+  | 'admin.stats.totalServices'
+  | 'admin.stats.totalCategories'
+  | 'admin.stats.activeServices'
+  | 'admin.services.title'
+  | 'admin.services.deleteConfirm'
+  | 'admin.services.noServices'
+  | 'admin.services.total'
+  | 'admin.services.editingService'
+  | 'admin.services.columns.name'
+  | 'admin.services.columns.owner'
+  | 'admin.services.columns.category'
+  | 'admin.services.columns.location'
+  | 'admin.services.columns.price'
+  | 'admin.services.columns.status'
+  | 'admin.services.columns.actions'
+  | 'admin.services.actions.edit'
+  | 'admin.services.actions.delete'
+  | 'admin.services.actions.enable'
+  | 'admin.services.actions.disable';

@@ -20,6 +20,7 @@ import {
 import { Service } from "@/types";
 import { Search, MoreHorizontal, Edit, Trash2, Eye, CheckCircle, XCircle, ToggleLeft, ToggleRight, Loader2 } from "lucide-react";
 import { useDeleteService, useToggleAvailability } from '@/hooks/useServices';
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ServiceManagementProps {
   services: Service[];
@@ -27,26 +28,19 @@ interface ServiceManagementProps {
   onUpdate: () => void;
 }
 
-const categoryNames: Record<string, string> = {
-  unloading: 'Жүк түшүрүү',
-  trucks: 'Жүк ташуу',
-  tractors: 'Трактор кызматтары',
-  concrete: 'Бетон ишмердүүлүгү',
-  water: 'Суу ташуу',
-};
-
 export function ServiceManagement({ services, loading, onUpdate }: ServiceManagementProps) {
+  const { t } = useLanguage();
   const { deleteService, loading: deleteLoading } = useDeleteService();
   const { toggleAvailability, loading: toggleLoading } = useToggleAvailability();
   const [actioningId, setActioningId] = useState<string | null>(null);
 
   const handleEdit = (service: Service) => {
-    console.log('Редактирование сервиса:', service);
-    // TODO: Реализовать редактирование
+    console.log(t("admin.services.editingService"), service);
+    // TODO: Implement editing functionality
   };
 
   const handleDelete = async (serviceId: string) => {
-    if (!confirm('Бул кызматты чынында эле өчүргүңүз келеби?')) {
+    if (!confirm(t("admin.services.deleteConfirm"))) {
       return;
     }
 
@@ -54,7 +48,7 @@ export function ServiceManagement({ services, loading, onUpdate }: ServiceManage
     const success = await deleteService(serviceId);
     
     if (success) {
-      onUpdate(); // Обновляем список
+      onUpdate();
     }
     setActioningId(null);
   };
@@ -64,7 +58,7 @@ export function ServiceManagement({ services, loading, onUpdate }: ServiceManage
     const result = await toggleAvailability(serviceId);
     
     if (result) {
-      onUpdate(); // Обновляем список
+      onUpdate();
     }
     setActioningId(null);
   };
@@ -73,12 +67,12 @@ export function ServiceManagement({ services, loading, onUpdate }: ServiceManage
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Кызматтарды башкаруу</CardTitle>
+          <CardTitle>{t("admin.services.title")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex justify-center items-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-            <span className="ml-2 text-gray-600">Жүктөлүүдө...</span>
+            <span className="ml-2 text-gray-600">{t("common.loading")}</span>
           </div>
         </CardContent>
       </Card>
@@ -88,25 +82,25 @@ export function ServiceManagement({ services, loading, onUpdate }: ServiceManage
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Кызматтарды башкаруу</CardTitle>
+        <CardTitle>{t("admin.services.title")}</CardTitle>
       </CardHeader>
       <CardContent>
         {services.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
-            Кызматтар табылган жок
+            {t("admin.services.noServices")}
           </div>
         ) : (
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Аталышы</TableHead>
-                  <TableHead>Ээси</TableHead>
-                  <TableHead>Категория</TableHead>
-                  <TableHead>Жайгашкан жери</TableHead>
-                  <TableHead>Баасы</TableHead>
-                  <TableHead>Статус</TableHead>
-                  <TableHead>Аракеттер</TableHead>
+                  <TableHead>{t("admin.services.columns.name")}</TableHead>
+                  <TableHead>{t("admin.services.columns.owner")}</TableHead>
+                  <TableHead>{t("admin.services.columns.category")}</TableHead>
+                  <TableHead>{t("admin.services.columns.location")}</TableHead>
+                  <TableHead>{t("admin.services.columns.price")}</TableHead>
+                  <TableHead>{t("admin.services.columns.status")}</TableHead>
+                  <TableHead>{t("admin.services.columns.actions")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -123,12 +117,12 @@ export function ServiceManagement({ services, loading, onUpdate }: ServiceManage
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline">
-                        {categoryNames[service.category] || service.category}
+                        {t(`categories.${service.category}`)}
                       </Badge>
                     </TableCell>
                     <TableCell>
                       <div>
-                        <div>{service.locationName}</div>
+                        <div>{t(`locations.${service.location}`)}</div>
                         {service.districtName && (
                           <div className="text-sm text-gray-500">{service.districtName}</div>
                         )}
@@ -137,7 +131,7 @@ export function ServiceManagement({ services, loading, onUpdate }: ServiceManage
                     <TableCell>{service.price}</TableCell>
                     <TableCell>
                       <Badge variant={service.available ? 'default' : 'secondary'}>
-                        {service.available ? 'Жеткиликтүү' : 'Жеткиликсиз'}
+                        {service.available ? t("services.card.available") : t("services.card.unavailable")}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -146,6 +140,7 @@ export function ServiceManagement({ services, loading, onUpdate }: ServiceManage
                           variant="outline"
                           size="sm"
                           onClick={() => handleEdit(service)}
+                          title={t("admin.services.actions.edit")}
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
@@ -154,6 +149,7 @@ export function ServiceManagement({ services, loading, onUpdate }: ServiceManage
                           size="sm"
                           onClick={() => handleToggleStatus(service._id)}
                           disabled={actioningId === service._id && toggleLoading}
+                          title={service.available ? t("admin.services.actions.disable") : t("admin.services.actions.enable")}
                         >
                           {service.available ? (
                             <ToggleRight className="h-4 w-4 text-green-600" />
@@ -167,6 +163,7 @@ export function ServiceManagement({ services, loading, onUpdate }: ServiceManage
                           onClick={() => handleDelete(service._id)}
                           disabled={actioningId === service._id && deleteLoading}
                           className="text-red-600 hover:text-red-700"
+                          title={t("admin.services.actions.delete")}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -181,7 +178,7 @@ export function ServiceManagement({ services, loading, onUpdate }: ServiceManage
         
         <div className="flex items-center justify-between mt-4">
           <div className="text-sm text-gray-500">
-            Жалпы: {services.length} кызмат
+            {t("admin.services.total")}: {services.length}
           </div>
         </div>
       </CardContent>

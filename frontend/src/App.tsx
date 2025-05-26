@@ -7,6 +7,8 @@ import Index from "./pages/Index";
 import Admin from "./pages/Admin";
 import CreateService from "./pages/CreateService";
 import NotFound from "./pages/NotFound";
+import { AppRoutes } from "./routes";
+import { LanguageProvider } from "./contexts/LanguageContext";
 
 const queryClient = new QueryClient();
 
@@ -15,15 +17,11 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/create-service" element={<CreateService />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <LanguageProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </LanguageProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

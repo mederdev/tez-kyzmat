@@ -4,7 +4,7 @@ import { CategoryFilter } from "@/components/features/filters/CategoryFilter";
 import { ServiceGrid } from "@/components/features/services/ServiceGrid";
 import { useServiceFilters } from "@/hooks/useServiceFilters";
 import { SERVICES } from "@/data/services";
-import { CATEGORIES, KYRGYZSTAN_REGIONS } from "@/data/constants";
+import { CATEGORIES } from "@/data/constants";
 
 const Index = () => {
   const {
@@ -13,7 +13,8 @@ const Index = () => {
     updateSearchTerm,
     updateCategory,
     updateLocation,
-    updateDistrict
+    updateDistrict,
+    loading
   } = useServiceFilters({ services: SERVICES });
 
   return (
@@ -21,7 +22,6 @@ const Index = () => {
       <Header
         searchTerm={filters.searchTerm}
         onSearchChange={updateSearchTerm}
-        regions={KYRGYZSTAN_REGIONS}
         selectedLocation={filters.selectedLocation}
         selectedDistrict={filters.selectedDistrict}
         onLocationChange={updateLocation}
@@ -35,7 +35,7 @@ const Index = () => {
           onCategoryChange={updateCategory}
         />
 
-        <ServiceGrid services={filteredServices} />
+        <ServiceGrid services={filteredServices} loading={loading} />
 
         <ContactSection />
       </div>

@@ -1,4 +1,5 @@
 import { Category, Region } from "@/types";
+import { translations } from "@/i18n/translations";
 
 export const CATEGORIES: Category[] = [
   { id: "all", name: "Бардык категориялар", icon: "🔧" },
@@ -140,8 +141,9 @@ export const KYRGYZSTAN_REGIONS: Region[] = [
   },
 ];
 
-export const WHATSAPP_MESSAGE_TEMPLATE = (serviceName: string) =>
-  `Салам! Мен "${serviceName}" кызматы боюнча кызыккам. Кошумча маалымат бере аласызбы?`;
+export const getWhatsAppMessageTemplate = (serviceName: string, language: 'ky' | 'ru'): string => {
+  return translations[language].services.whatsappMessage.replace('{serviceName}', serviceName);
+};
 
 // Моковые изображения для разных категорий
 export const MOCK_IMAGES = {

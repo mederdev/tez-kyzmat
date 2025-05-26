@@ -18,9 +18,11 @@ export const useServiceFilters = ({ services }: UseServiceFiltersProps) => {
     selectedLocation: "all",
     selectedDistrict: undefined,
   });
+  const [loading, setLoading] = useState(false);
 
   const filteredServices = useMemo(() => {
-    return services.filter((service) => {
+    setLoading(true);
+    const filtered = services.filter((service) => {
       const matchesSearch =
         service.name.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
         service.description
@@ -43,6 +45,8 @@ export const useServiceFilters = ({ services }: UseServiceFiltersProps) => {
         matchesSearch && matchesCategory && matchesLocation && matchesDistrict
       );
     });
+    setLoading(false);
+    return filtered;
   }, [services, filters]);
 
   const updateSearchTerm = (searchTerm: string) => {
@@ -57,7 +61,7 @@ export const useServiceFilters = ({ services }: UseServiceFiltersProps) => {
     setFilters((prev) => ({
       ...prev,
       selectedLocation,
-      selectedDistrict: undefined, // Сбрасываем район при смене региона
+      selectedDistrict: undefined, // Reset district when location changes
     }));
   };
 
@@ -68,6 +72,7 @@ export const useServiceFilters = ({ services }: UseServiceFiltersProps) => {
   return {
     filters,
     filteredServices,
+    loading,
     updateSearchTerm,
     updateCategory,
     updateLocation,

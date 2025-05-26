@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Package, Layers, TrendingUp, Loader2 } from "lucide-react";
+import { Package, Layers, TrendingUp, Loader2 } from "lucide-react";
 import { AdminStats as AdminStatsType } from "@/types";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface AdminStatsProps {
   stats: AdminStatsType | null;
@@ -8,10 +9,12 @@ interface AdminStatsProps {
 }
 
 export function AdminStats({ stats, loading }: AdminStatsProps) {
+  const { t } = useLanguage();
+
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {[...Array(4)].map((_, i) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        {[...Array(3)].map((_, i) => (
           <Card key={i}>
             <CardContent className="p-6">
               <div className="flex items-center justify-center h-20">
@@ -30,7 +33,7 @@ export function AdminStats({ stats, loading }: AdminStatsProps) {
         <Card>
           <CardContent className="p-6">
             <div className="text-center text-gray-500">
-              Статистика жеткиликсиз
+              {t("admin.stats.unavailable")}
             </div>
           </CardContent>
         </Card>
@@ -40,37 +43,30 @@ export function AdminStats({ stats, loading }: AdminStatsProps) {
 
   const statsData = [
     {
-      title: "Жалпы колдонуучулар",
-      value: stats.totalUsers,
-      icon: Users,
+      title: t("admin.stats.totalServices"),
+      value: stats.totalServices,
+      icon: Package,
       color: "text-blue-600",
       bgColor: "bg-blue-100"
     },
     {
-      title: "Жалпы кызматтар",
-      value: stats.totalServices,
-      icon: Package,
-      color: "text-green-600",
-      bgColor: "bg-green-100"
-    },
-    {
-      title: "Категориялар",
+      title: t("admin.stats.totalCategories"),
       value: stats.totalCategories,
       icon: Layers,
       color: "text-purple-600",
       bgColor: "bg-purple-100"
     },
     {
-      title: "Активдүү кызматтар",
-      value: Object.values(stats.servicesByCategory).reduce((sum, count) => sum + count, 0),
+      title: t("admin.stats.activeServices"),
+      value: stats.activeServices,
       icon: TrendingUp,
-      color: "text-orange-600",
-      bgColor: "bg-orange-100"
+      color: "text-green-600",
+      bgColor: "bg-green-100"
     }
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
       {statsData.map((stat, index) => {
         const Icon = stat.icon;
         return (
