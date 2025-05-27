@@ -180,27 +180,27 @@ export const ServiceForm = ({ onSubmit, onCancel, isLoading = false }: ServiceFo
           <div>
             <Label>{t('services.form.images')}</Label>
             <div className="mt-2 space-y-4">
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {selectedImages.map((image, index) => (
-                  <div key={index} className="relative aspect-square">
+                  <div key={index} className="relative aspect-square group">
                     <img
                       src={URL.createObjectURL(image)}
                       alt={`Upload ${index + 1}`}
                       className="w-full h-full object-cover rounded-lg"
                     />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
                     <button
                       type="button"
                       onClick={() => removeImage(index)}
-                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-red-500 rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50"
+                      title={t('services.form.removeImage')}
                     >
-                      <X className="h-4 w-4" />
+                      <X className="h-5 w-5" />
                     </button>
                   </div>
                 ))}
                 {selectedImages.length < 5 && (
-                  <label className="border-2 border-dashed border-gray-300 rounded-lg aspect-square flex flex-col items-center justify-center cursor-pointer hover:border-gray-400">
-                    <Upload className="h-8 w-8 text-gray-400" />
-                    <span className="mt-2 text-sm text-gray-500">{t('services.form.addImages')}</span>
+                  <label className="border-2 border-dashed border-gray-300 rounded-lg aspect-square flex flex-col items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition-colors relative group">
                     <input
                       type="file"
                       accept="image/*"
@@ -208,10 +208,38 @@ export const ServiceForm = ({ onSubmit, onCancel, isLoading = false }: ServiceFo
                       onChange={handleImageUpload}
                       className="hidden"
                     />
+                    <div className="flex flex-col items-center space-y-2 px-4">
+                      <div className="p-2 bg-gray-100 rounded-full group-hover:bg-gray-200 transition-colors">
+                        <Upload className="h-6 w-6 text-gray-600" />
+                      </div>
+                      <span className="text-sm text-gray-600 text-center font-medium">
+                        {t('services.form.addImages')}
+                      </span>
+                      <span className="text-xs text-gray-500 text-center">
+                        {t('services.form.maxImages')}
+                      </span>
+                    </div>
                   </label>
                 )}
               </div>
-              <p className="text-sm text-gray-500">{t('services.form.maxImages')}</p>
+              {selectedImages.length > 0 && (
+                <div className="flex items-center justify-between text-sm text-gray-500">
+                  <span>
+                    {selectedImages.length} / 5 {t('services.form.imagesSelected')}
+                  </span>
+                  {selectedImages.length > 0 && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setSelectedImages([])}
+                      className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                    >
+                      {t('services.form.clearImages')}
+                    </Button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 

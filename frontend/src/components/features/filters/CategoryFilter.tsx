@@ -17,7 +17,7 @@ export function CategoryFilter({
   const { t } = useLanguage();
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full pb-4">
       <Label htmlFor="category" className="mb-2 text-sm sm:text-base font-medium">
         {t('filters.category')}
       </Label>

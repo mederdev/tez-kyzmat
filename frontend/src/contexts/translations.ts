@@ -69,6 +69,11 @@ type TranslationKeys = {
       moreImages: string;
       contactInfo: string;
       call: string;
+      share: string;
+      copyContact: string;
+      linkCopied: string;
+      contactCopied: string;
+      clickToView: string;
     };
     form: {
       title: string;
@@ -89,6 +94,9 @@ type TranslationKeys = {
       addImages: string;
       maxImages: string;
       submit: string;
+      removeImage: string;
+      imagesSelected: string;
+      clearImages: string;
     };
   };
   admin: {
@@ -195,7 +203,12 @@ export const translations: Record<'ky' | 'ru', TranslationKeys> = {
         whatsappMessage: 'Саламатсызбы! Тез Кызмат аркылуу кызматыңыз менен кызыктым.',
         moreImages: 'сүрөт көбүрөөк',
         contactInfo: 'Байланыш маалыматы',
-        call: 'Чалуу'
+        call: 'Чалуу',
+        share: 'Бөлүшүү',
+        copyContact: 'Номерди көчүрүү',
+        linkCopied: 'Шилтеме көчүрүлдү',
+        contactCopied: 'Номер көчүрүлдү',
+        clickToView: 'Сүрөттөрдү көрүү үчүн басыңыз'
       },
       form: {
         title: 'Кызмат кошуу',
@@ -214,8 +227,11 @@ export const translations: Record<'ky' | 'ru', TranslationKeys> = {
         whatsappPlaceholder: 'Мисалы: 0700123456',
         images: 'Сүрөттөр',
         addImages: 'Сүрөттөрдү кошуу үчүн басыңыз же сүйрөп алып келиңиз',
-        maxImages: 'Максимум 10 сүрөт',
-        submit: 'Кошуу'
+        maxImages: 'Максимум 5 сүрөт',
+        submit: 'Кошуу',
+        removeImage: 'Сүрөттү өчүрүү',
+        imagesSelected: 'сүрөт тандалды',
+        clearImages: 'Бардык сүрөттөрдү өчүрүү'
       }
     },
     admin: {
@@ -320,7 +336,12 @@ export const translations: Record<'ky' | 'ru', TranslationKeys> = {
         whatsappMessage: 'Здравствуйте! Я заинтересован в вашей услуге через Тез Кызмат.',
         moreImages: 'больше фото',
         contactInfo: 'Контактная информация',
-        call: 'Позвонить'
+        call: 'Позвонить',
+        share: 'Поделиться',
+        copyContact: 'Скопировать номер',
+        linkCopied: 'Ссылка скопирована',
+        contactCopied: 'Номер скопирован',
+        clickToView: 'Нажмите, чтобы просмотреть фото'
       },
       form: {
         title: 'Добавить услугу',
@@ -339,8 +360,11 @@ export const translations: Record<'ky' | 'ru', TranslationKeys> = {
         whatsappPlaceholder: 'Например: 0700123456',
         images: 'Фотографии',
         addImages: 'Нажмите или перетащите фотографии сюда',
-        maxImages: 'Максимум 10 фотографий',
-        submit: 'Добавить'
+        maxImages: 'Максимум 5 фотографий',
+        submit: 'Добавить',
+        removeImage: 'Удалить фото',
+        imagesSelected: 'фото выбрано',
+        clearImages: 'Удалить все фото'
       }
     },
     admin: {
