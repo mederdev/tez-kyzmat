@@ -4,11 +4,13 @@ import { Model } from 'mongoose';
 import { Service, ServiceDocument } from './service.schema';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
+import { User, UserDocument } from './user.schema';
 
 @Injectable()
 export class ServicesService {
   constructor(
     @InjectModel(Service.name) private serviceModel: Model<ServiceDocument>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) {}
 
   async create(createServiceDto: CreateServiceDto): Promise<Service> {
@@ -82,17 +84,22 @@ export class ServicesService {
   }
 
   async getStats(): Promise<any> {
-    const total = await this.serviceModel.countDocuments().exec();
-    const active = await this.serviceModel
-      .countDocuments({ available: true })
-      .exec();
-    const categories = await this.serviceModel.distinct('category').exec();
+    const [total, categoriesBreakdown] = await Promise.all([
+      this.serviceModel.countDocuments().exec(),
+      this.getCategoriesBreakdown()
+    ]);
+
+    // Convert categories breakdown to the expected format
+    const servicesByCategory = categoriesBreakdown.reduce((acc, item) => {
+      acc[item.category] = item.count;
+      return acc;
+    }, {});
 
     return {
       totalServices: total,
-      activeServices: active,
-      totalCategories: categories.length,
-      categoriesBreakdown: await this.getCategoriesBreakdown(),
+      totalCategories: Object.keys(servicesByCategory).length,
+      servicesByCategory,
+      activeServices: categoriesBreakdown.reduce((sum, item) => sum + item.active, 0)
     };
   }
 
