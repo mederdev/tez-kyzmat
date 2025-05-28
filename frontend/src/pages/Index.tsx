@@ -1,6 +1,5 @@
 import { Header } from "@/components/layout/Header";
 import { ContactSection } from "@/components/layout/ContactSection";
-import { CategoryFilter } from "@/components/features/filters/CategoryFilter";
 import { ServiceGrid } from "@/components/features/services/ServiceGrid";
 import { useServiceFilters } from "@/hooks/useServiceFilters";
 import { SERVICES } from "@/data/services";
@@ -26,17 +25,12 @@ const Index = () => {
         selectedDistrict={filters.selectedDistrict}
         onLocationChange={updateLocation}
         onDistrictChange={updateDistrict}
+        selectedCategory={filters.selectedCategory}
+        onCategoryChange={updateCategory}
       />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <CategoryFilter
-          categories={CATEGORIES}
-          selectedCategory={filters.selectedCategory}
-          onCategoryChange={updateCategory}
-        />
-
         <ServiceGrid services={filteredServices} loading={loading} />
-
         <ContactSection />
       </div>
     </div>

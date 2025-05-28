@@ -22,14 +22,16 @@ type TranslationKeys = {
     };
   };
   filters: {
-    category: string;
     location: string;
     district: string;
-    selectCategory: string;
-    selectRegion: string;
-    selectDistrict: string;
+    category: string;
+    allCategories: string;
     allRegions: string;
     allDistricts: string;
+    selectRegion: string;
+    selectDistrict: string;
+    selectCategory: string;
+    filters: string;
   };
   categories: {
     all: string;
@@ -157,14 +159,16 @@ export const translations: Record<'ky' | 'ru', TranslationKeys> = {
       }
     },
     filters: {
-      category: 'Категория',
-      location: 'Аймак',
+      location: 'Жайгашкан жери',
       district: 'Район',
-      selectCategory: 'Категорияны тандаңыз',
+      category: 'Категория',
+      allCategories: 'Бардык категориялар',
+      allRegions: 'Бардык аймактар',
+      allDistricts: 'Бардык райондор',
       selectRegion: 'Аймакты тандаңыз',
       selectDistrict: 'Районду тандаңыз',
-      allRegions: 'Бардык аймактар',
-      allDistricts: 'Бардык райондор'
+      selectCategory: 'Категорияны тандаңыз',
+      filters: 'Фильтрлер',
     },
     categories: {
       all: 'Бардык категориялар',
@@ -290,14 +294,16 @@ export const translations: Record<'ky' | 'ru', TranslationKeys> = {
       }
     },
     filters: {
-      category: 'Категория',
-      location: 'Регион',
+      location: 'Местоположение',
       district: 'Район',
-      selectCategory: 'Выберите категорию',
+      category: 'Категория',
+      allCategories: 'Все категории',
+      allRegions: 'Все регионы',
+      allDistricts: 'Все районы',
       selectRegion: 'Выберите регион',
       selectDistrict: 'Выберите район',
-      allRegions: 'Все регионы',
-      allDistricts: 'Все районы'
+      selectCategory: 'Выберите категорию',
+      filters: 'Фильтры',
     },
     categories: {
       all: 'Все категории',

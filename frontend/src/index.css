@@ -99,3 +99,57 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom Scrollbar Styles */
+@layer utilities {
+  /* For Webkit browsers (Chrome, Safari) */
+  .custom-scrollbar {
+    scrollbar-width: thin; /* For Firefox */
+    
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.3);
+      }
+      
+      &:active {
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+    }
+    
+    /* Hide scrollbar when not hovering */
+    &::-webkit-scrollbar-thumb {
+      visibility: hidden;
+    }
+    
+    &:hover::-webkit-scrollbar-thumb {
+      visibility: visible;
+    }
+  }
+
+  /* Dark mode scrollbar */
+  .dark .custom-scrollbar {
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.2);
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+      }
+      
+      &:active {
+        background-color: rgba(255, 255, 255, 0.4);
+      }
+    }
+  }
+}
