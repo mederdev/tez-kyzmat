@@ -56,7 +56,12 @@ export const translations = {
       codeSent: 'Код жөнөтүлдү',
       loginToAccess: 'Бул функцияны колдонуу үчүн системага кириңиз',
       whatsappLoginMessage: 'Салам! Мен Тез Кызмат аркылуу кирүү үчүн келдим.',
-      whatsappSignupMessage: 'Салам! Мен Тез Кызматка катталуу үчүн келдим.'
+      whatsappSignupMessage: 'Салам! Мен Тез Кызматка катталуу үчүн келдим.',
+      name: 'Атыңыз',
+      namePlaceholder: 'Толук атыңызды жазыңыз',
+      whatsappCodeSent: 'WhatsApp аркылуу код жөнөтүлдү',
+      claimRequestSent: 'Кызматты ээлөө сурамыңыз жөнөтүлдү',
+      signInSuccess: 'Ийгиликтүү кирдиңиз'
     },
     filters: {
       location: 'Жайгашкан жери',
@@ -79,6 +84,7 @@ export const translations = {
       water: 'Суу ташыгычтар',
     },
     locations: {
+      all: 'Бардык аймактар',
       bishkek: 'Бишкек шаары',
       osh: 'Ош шаары',
       chui: 'Чүй областы',
@@ -88,21 +94,29 @@ export const translations = {
       'jalal-abad': 'Жалал-Абад областы',
       'osh-region': 'Ош областы',
       batken: 'Баткен областы',
+      karakol: 'Каракол шаары',
+      tokmok: 'Токмок шаары'
     },
     services: {
-      createNew: 'Жаңы жарыя кошуу',
-      createDescription: 'Техника же кызматыңызды жарыялаңыз',
-      success: 'Жарыя ийгиликтүү кошулду!',
-      error: 'Жарыя кошууда ката кетти. Кайра аракет кылыңыз.',
-      whatsappMessage: 'Салам! Мен "{serviceName}" кызматы боюнча кызыккам. Кошумча маалымат бере аласызбы?',
+      title: 'Кызматтар',
+      create: 'Жаңы жарыя',
+      noServices: 'Кызматтар табылган жок',
       card: {
         available: 'Жеткиликтүү',
         unavailable: 'Жеткиликсиз',
+        contact: 'Байланыш',
+        whatsapp: 'WhatsApp',
+        whatsappMessage: 'Салам! Мен "{serviceName}" кызматы боюнча кызыkкам. Кошумча маалымат бере аласызбы?',
         moreImages: 'Дагы',
         contactInfo: 'Байланыш маалыматы:',
         call: 'Чалуу',
-        whatsapp: 'WhatsApp',
-        askInfo: 'Салам! {serviceName} кызматы боюнча маалымат алгым келет.'
+        share: 'Бөлүшүү',
+        copyContact: 'Байланышты көчүрүү',
+        linkCopied: 'Шилтеме көчүрүлдү',
+        contactCopied: 'Байланыш көчүрүлдү',
+        clickToView: 'Көрүү үчүн чыкылдатыңыз',
+        noImage: 'Сүрөт жок',
+        edit: 'Түзөтүү'
       },
       form: {
         title: 'Жарыя маалыматтары',
@@ -123,6 +137,17 @@ export const translations = {
         addImages: 'Сүрөттөрдү кошуу',
         maxImages: 'Максимум 5 сүрөт',
         submit: 'Жарыяны жайгаштыруу',
+        removeImage: 'Сүрөттү өчүрүү',
+        imagesSelected: '{count} сүрөт тандалды',
+        clearImages: 'Бардык сүрөттөрдү өчүрүү',
+        uploadError: 'Сүрөттөрдү жүктөөдө ката кетти',
+        uploadSuccess: 'Сүрөттөр ийгиликтүү жүктөлдү',
+        dragAndDrop: 'Сүрөттөрдү бул жерге сүйрөп таштаңыз',
+        or: 'же',
+        browse: 'Файлдарды тандоо',
+        fileTypes: 'PNG, JPG же JPEG (макс. 5MB)',
+        fileTooLarge: 'Файл өлчөмү 5MB дан чоң',
+        invalidFileType: 'Туура эмес файл форматы'
       }
     }
   },
@@ -181,7 +206,12 @@ export const translations = {
       codeSent: 'Код отправлен',
       loginToAccess: 'Пожалуйста, войдите в систему для доступа к этой функции',
       whatsappLoginMessage: 'Здравствуйте! Я хочу войти через Тез Кызмат.',
-      whatsappSignupMessage: 'Здравствуйте! Я хочу зарегистрироваться в Тез Кызмат.'
+      whatsappSignupMessage: 'Здравствуйте! Я хочу зарегистрироваться в Тез Кызмат.',
+      name: 'Ваше имя',
+      namePlaceholder: 'Введите ваше полное имя',
+      whatsappCodeSent: 'Код отправлен через WhatsApp',
+      claimRequestSent: 'Заявка на получение услуги отправлена',
+      signInSuccess: 'Вы успешно вошли'
     },
     filters: {
       location: 'Местоположение',
@@ -204,6 +234,7 @@ export const translations = {
       water: 'Водовозы',
     },
     locations: {
+      all: 'Все регионы',
       bishkek: 'город Бишкек',
       osh: 'город Ош',
       chui: 'Чуйская область',
@@ -213,21 +244,29 @@ export const translations = {
       'jalal-abad': 'Джалал-Абадская область',
       'osh-region': 'Ошская область',
       batken: 'Баткенская область',
+      karakol: 'город Каракол',
+      tokmok: 'город Токмок'
     },
     services: {
-      createNew: 'Добавить новое объявление',
-      createDescription: 'Разместите вашу технику или услугу',
-      success: 'Объявление успешно добавлено!',
-      error: 'Ошибка при добавлении объявления. Пожалуйста, попробуйте снова.',
-      whatsappMessage: 'Здравствуйте! Я заинтересован в услуге "{serviceName}". Можете предоставить дополнительную информацию?',
+      title: 'Услуги',
+      create: 'Новое объявление',
+      noServices: 'Услуги не найдены',
       card: {
         available: 'Доступно',
         unavailable: 'Недоступно',
+        contact: 'Контакт',
+        whatsapp: 'WhatsApp',
+        whatsappMessage: 'Здравствуйте! Я заинтересован в услуге "{serviceName}". Можете предоставить дополнительную информацию?',
         moreImages: 'Ещё',
         contactInfo: 'Контактная информация:',
         call: 'Позвонить',
-        whatsapp: 'WhatsApp',
-        askInfo: 'Здравствуйте! Хочу узнать информацию об услуге {serviceName}.'
+        share: 'Поделиться',
+        copyContact: 'Копировать контакт',
+        linkCopied: 'Ссылка скопирована',
+        contactCopied: 'Контакт скопирован',
+        clickToView: 'Нажмите для просмотра',
+        noImage: 'Нет изображения',
+        edit: 'Редактировать'
       },
       form: {
         title: 'Информация об объявлении',
@@ -248,6 +287,17 @@ export const translations = {
         addImages: 'Добавить фотографии',
         maxImages: 'Максимум 5 фотографий',
         submit: 'Разместить объявление',
+        removeImage: 'Удалить фотографию',
+        imagesSelected: 'Выбрано {count} фотографий',
+        clearImages: 'Удалить все фотографии',
+        uploadError: 'Ошибка при загрузке фотографий',
+        uploadSuccess: 'Фотографии успешно загружены',
+        dragAndDrop: 'Перетащите фотографии сюда',
+        or: 'или',
+        browse: 'Выбрать файлы',
+        fileTypes: 'PNG, JPG или JPEG (макс. 5MB)',
+        fileTooLarge: 'Размер файла превышает 5MB',
+        invalidFileType: 'Неподдерживаемый формат файла'
       }
     }
   }

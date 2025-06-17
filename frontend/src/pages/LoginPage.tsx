@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams, Link, useLocation } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuthContext } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,7 +12,7 @@ import { MessageSquare } from 'lucide-react';
 
 export function LoginPage() {
   const { t } = useLanguage();
-  const { login } = useAuth();
+  const { login, sendCode } = useAuthContext();
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -30,8 +30,7 @@ export function LoginPage() {
     setIsLoading(true);
 
     try {
-      // Here you would call your API to send verification code
-      // await sendVerificationCode(formData.phone);
+      await sendCode(formData.phone, 'phone');
       setVerificationStep('code');
       toast({
         description: t('auth.codeSent'),
@@ -51,7 +50,7 @@ export function LoginPage() {
     setIsLoading(true);
 
     try {
-      await login(formData.phone, formData.code, 'phone');
+      await login(formData.phone, formData.code);
       toast({
         description: t('auth.loginSuccess'),
       });
@@ -69,9 +68,10 @@ export function LoginPage() {
   const handleWhatsAppLogin = async () => {
     setIsLoading(true);
     try {
-      // Here you would implement WhatsApp authentication
-      // This could open WhatsApp in a new window or redirect to WhatsApp
-      window.open(`https://wa.me/your-whatsapp-number?text=${encodeURIComponent(t('auth.whatsappLoginMessage'))}`, '_blank');
+      await sendCode(formData.phone, 'whatsapp');
+      toast({
+        description: t('auth.whatsappCodeSent'),
+      });
     } catch (error) {
       toast({
         variant: 'destructive',

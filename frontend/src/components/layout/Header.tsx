@@ -6,12 +6,13 @@ import { LocationId, DistrictId } from "@/types";
 import { Link, useLocation } from "react-router-dom";
 import { Settings, Plus, Menu, Tractor, Filter, ChevronDown, LogOut, Edit } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuthContext } from "@/contexts/AuthContext";
 import { LanguageSwitcher } from "@/components/features/language/LanguageSwitcher";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { CATEGORIES } from "@/data/constants";
+import { ServiceFilters } from "@/components/features/services/ServiceFilters";
 
 interface HeaderProps {
   searchTerm?: string;
@@ -22,6 +23,7 @@ interface HeaderProps {
   onDistrictChange?: (district?: DistrictId) => void;
   selectedCategory?: string;
   onCategoryChange?: (category: string) => void;
+  onFilterChange?: (filters: any) => void;
   hideSearch?: boolean;
 }
 
@@ -34,11 +36,12 @@ export const Header = ({
   onDistrictChange = () => {},
   selectedCategory = 'all',
   onCategoryChange = () => {},
+  onFilterChange = () => {},
   hideSearch = false
 }: HeaderProps) => {
   const { t } = useLanguage();
   const location = useLocation();
-  const { user, isAuthenticated, isAdmin, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuthContext();
   const isAdminPage = location.pathname === '/admin';
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
@@ -98,7 +101,7 @@ export const Header = ({
               {t('common.editServices')}
             </Button>
           </Link>
-          {isAdmin && (
+          {user?.isAdmin && (
             <Link to="/admin">
               <Button 
                 variant="outline" 
@@ -207,32 +210,11 @@ export const Header = ({
               </Button>
             </div>
 
-            <div className={cn(
-              "grid gap-3 overflow-hidden transition-all duration-300",
-              isFiltersOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-            )}>
-              <div className="min-h-0">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 py-3 w-full">
-                  <div className="w-full">
-                    <CategoryFilter
-                      categories={CATEGORIES}
-                      selectedCategory={selectedCategory}
-                      onCategoryChange={onCategoryChange}
-                      hideLabel
-                    />
-                  </div>
-                  <div className="w-full md:col-span-2">
-                    <LocationFilter
-                      selectedLocation={selectedLocation}
-                      selectedDistrict={selectedDistrict}
-                      onLocationChange={onLocationChange}
-                      onDistrictChange={onDistrictChange}
-                      hideLabel
-                    />
-                  </div>
-                </div>
+            {isFiltersOpen && (
+              <div className="animate-in slide-in-from-top-2 duration-200">
+                <ServiceFilters onFilterChange={onFilterChange} />
               </div>
-            </div>
+            )}
           </div>
         )}
       </div>

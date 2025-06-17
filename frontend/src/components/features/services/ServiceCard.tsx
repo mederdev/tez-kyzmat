@@ -1,4 +1,4 @@
-import { Phone, MapPin, MessageCircle, User, Share2, Copy, Edit } from "lucide-react";
+import { Phone, MapPin, MessageCircle, User, Share2, Copy, Edit, Check } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -7,66 +7,58 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Service } from "@/types";
+import { Service } from "@/types/api";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ImageGallery } from "./ImageGallery";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { ServiceCardProps } from './types';
+import { useAuthContext } from "@/contexts/AuthContext";
 
-export function ServiceCard({ service }: ServiceCardProps) {
+interface ServiceCardProps {
+  service: Service;
+}
+
+export const ServiceCard = ({ service }: ServiceCardProps) => {
   const { t } = useLanguage();
   const { toast } = useToast();
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuthContext();
   const isOwner = user?.id === service.ownerId;
+  const [copied, setCopied] = useState(false);
 
   const handleCallClick = () => {
     window.location.href = `tel:${service.contact}`;
   };
 
   const handleWhatsAppClick = () => {
-    const message = t('services.card.whatsappMessage')
-      .replace('{serviceName}', service.name)
-      .replace('{ownerName}', service.ownerName);
-    const whatsappUrl = `https://wa.me/${service.whatsapp.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+    const message = t('services.card.whatsappMessage').replace('{serviceName}', service.name);
+    const whatsappUrl = `https://wa.me/${service.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
   const handleShare = async () => {
-    const shareData = {
-      title: service.name,
-      text: `${service.name} - ${service.description}`,
-      url: window.location.href,
-    };
-
     try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else {
-        await navigator.clipboard.writeText(window.location.href);
-        toast({
-          description: t('services.card.linkCopied'),
-        });
-      }
+      await navigator.share({
+        title: service.name,
+        text: service.description,
+        url: window.location.href,
+      });
     } catch (error) {
       console.error('Error sharing:', error);
     }
   };
 
-  const handleCopyContact = async () => {
-    try {
-      await navigator.clipboard.writeText(service.contact);
-      toast({
-        description: t('services.card.contactCopied'),
-      });
-    } catch (error) {
-      console.error('Error copying contact:', error);
-    }
+  const handleCopyContact = () => {
+    navigator.clipboard.writeText(service.contact);
+    setCopied(true);
+    toast({
+      title: t('services.card.contactCopied'),
+      duration: 2000,
+    });
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const handleEdit = () => {
@@ -182,7 +174,11 @@ export function ServiceCard({ service }: ServiceCardProps) {
                 onClick={handleCopyContact}
                 title={t('services.card.copyContact')}
               >
-                <Copy className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                {copied ? (
+                  <Check className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                ) : (
+                  <Copy className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                )}
               </Button>
             </div>
           </div>
@@ -222,4 +218,4 @@ export function ServiceCard({ service }: ServiceCardProps) {
       </CardFooter>
     </Card>
   );
-} 
+}; 

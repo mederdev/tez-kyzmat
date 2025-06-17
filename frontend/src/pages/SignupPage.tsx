@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuthContext } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,7 +12,7 @@ import { MessageSquare } from 'lucide-react';
 
 export function SignupPage() {
   const { t } = useLanguage();
-  const { register } = useAuth();
+  const { register, sendCode } = useAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -20,6 +20,7 @@ export function SignupPage() {
   const [formData, setFormData] = useState({
     phone: '',
     code: '',
+    name: '',
   });
 
   const handlePhoneSubmit = async (e: React.FormEvent) => {
@@ -27,8 +28,7 @@ export function SignupPage() {
     setIsLoading(true);
 
     try {
-      // Here you would call your API to send verification code
-      // await sendVerificationCode(formData.phone);
+      await sendCode(formData.phone, 'phone');
       setVerificationStep('code');
       toast({
         description: t('auth.codeSent'),
@@ -48,7 +48,7 @@ export function SignupPage() {
     setIsLoading(true);
 
     try {
-      await register(formData.phone, formData.code, 'phone');
+      await register(formData.phone, formData.code, formData.name);
       toast({
         description: t('auth.registerSuccess'),
       });
@@ -66,9 +66,10 @@ export function SignupPage() {
   const handleWhatsAppSignup = async () => {
     setIsLoading(true);
     try {
-      // Here you would implement WhatsApp authentication
-      // This could open WhatsApp in a new window or redirect to WhatsApp
-      window.open(`https://wa.me/your-whatsapp-number?text=${encodeURIComponent(t('auth.whatsappSignupMessage'))}`, '_blank');
+      await sendCode(formData.phone, 'whatsapp');
+      toast({
+        description: t('auth.whatsappCodeSent'),
+      });
     } catch (error) {
       toast({
         variant: 'destructive',
@@ -122,6 +123,18 @@ export function SignupPage() {
                 </form>
               ) : (
                 <form onSubmit={handleCodeVerification} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">{t('auth.name')}</Label>
+                    <Input
+                      id="name"
+                      name="name"
+                      type="text"
+                      placeholder={t('auth.namePlaceholder')}
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
                   <div className="space-y-2">
                     <Label htmlFor="code">{t('auth.verificationCode')}</Label>
                     <Input

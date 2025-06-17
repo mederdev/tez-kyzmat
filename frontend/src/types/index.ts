@@ -8,14 +8,14 @@ export interface Service {
   whatsapp: string;
   location: string;
   locationName: string;
-  district?: string;
-  districtName?: string;
+  district: string | null;
+  districtName: string | null;
   price: string;
   available: boolean;
   images: string[];
-  createdAt?: string;
-  updatedAt?: string;
-  ownerId?: string;
+  createdAt: string;
+  updatedAt: string;
+  ownerId: string | null;
 }
 
 export interface Category {
@@ -128,6 +128,11 @@ export type TranslationKey =
   | 'common.contact.description'
   | 'common.contact.addButton'
   | 'common.contact.contactButton'
+  | 'common.login'
+  | 'common.logout'
+  | 'common.editServices'
+  | 'common.error'
+  | 'common.save'
   | 'filters.category'
   | 'filters.location'
   | 'filters.district'
@@ -154,24 +159,16 @@ export type TranslationKey =
   | 'locations.batken'
   | 'locations.karakol'
   | 'locations.tokmok'
-  | 'services.createNew'
-  | 'services.createDescription'
-  | 'services.success'
-  | 'services.error'
-  | 'services.noResults'
-  | 'services.tryDifferentFilters'
-  | 'services.card.available'
-  | 'services.card.unavailable'
-  | 'services.card.contact'
+  | 'services.title'
+  | 'services.create'
+  | 'services.noServices'
+  | 'services.card.noImage'
   | 'services.card.whatsapp'
   | 'services.card.whatsappMessage'
-  | 'services.card.moreImages'
-  | 'services.card.contactInfo'
-  | 'services.card.call'
-  | 'services.card.share'
   | 'services.card.copyContact'
-  | 'services.card.linkCopied'
   | 'services.card.contactCopied'
+  | 'services.card.share'
+  | 'services.card.linkCopied'
   | 'services.card.clickToView'
   | 'services.form.title'
   | 'services.form.name'
@@ -194,6 +191,50 @@ export type TranslationKey =
   | 'services.form.removeImage'
   | 'services.form.imagesSelected'
   | 'services.form.clearImages'
+  | 'services.form.uploadError'
+  | 'services.form.uploadSuccess'
+  | 'services.form.dragAndDrop'
+  | 'services.form.or'
+  | 'services.form.browse'
+  | 'services.form.fileTypes'
+  | 'services.form.fileTooLarge'
+  | 'services.form.invalidFileType'
+  | 'services.auth.signInTitle'
+  | 'services.auth.signInDescription'
+  | 'auth.loginTitle'
+  | 'auth.loginDescription'
+  | 'auth.signupTitle'
+  | 'auth.signupDescription'
+  | 'auth.login'
+  | 'auth.loginSuccess'
+  | 'auth.loginError'
+  | 'auth.phone'
+  | 'auth.phonePlaceholder'
+  | 'auth.whatsappLogin'
+  | 'auth.whatsappSignup'
+  | 'auth.verificationCode'
+  | 'auth.verificationCodePlaceholder'
+  | 'auth.sendCode'
+  | 'auth.resendCode'
+  | 'auth.verifyCode'
+  | 'auth.noAccount'
+  | 'auth.hasAccount'
+  | 'auth.register'
+  | 'auth.registerSuccess'
+  | 'auth.registerError'
+  | 'auth.logout'
+  | 'auth.logoutSuccess'
+  | 'auth.invalidPhone'
+  | 'auth.invalidCode'
+  | 'auth.codeSent'
+  | 'auth.loginToAccess'
+  | 'auth.whatsappLoginMessage'
+  | 'auth.whatsappSignupMessage'
+  | 'auth.name'
+  | 'auth.namePlaceholder'
+  | 'auth.whatsappCodeSent'
+  | 'auth.claimRequestSent'
+  | 'auth.signInSuccess'
   | 'admin.title'
   | 'admin.statsError'
   | 'admin.servicesError'
@@ -217,3 +258,16 @@ export type TranslationKey =
   | 'admin.services.actions.delete'
   | 'admin.services.actions.enable'
   | 'admin.services.actions.disable';
+
+export interface PaginationInfo {
+  page: number;
+  limit: number;
+  total: number;
+  pages: number;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  pagination?: PaginationInfo;
+}

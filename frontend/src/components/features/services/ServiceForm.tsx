@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { Upload, X } from "lucide-react";
 import { ServiceFormData, Category } from "@/types";
-import { CATEGORIES } from "@/data/constants";
+import { CATEGORIES, KYRGYZSTAN_REGIONS } from "@/data/constants";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ServiceFormProps {
@@ -21,21 +21,27 @@ interface ServiceFormProps {
 export const ServiceForm = ({ onSubmit, onCancel, isLoading = false, initialData }: ServiceFormProps) => {
   const { t } = useLanguage();
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [selectedLocation, setSelectedLocation] = useState<string>('');
 
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-    reset
+    reset,
+    watch
   } = useForm<ServiceFormData>({
     defaultValues: initialData
   });
+
+  // Watch location changes to update districts
+  const location = watch('location');
 
   // Reset form when initialData changes
   useEffect(() => {
     if (initialData) {
       reset(initialData);
+      setSelectedLocation(initialData.location);
     }
   }, [initialData, reset]);
 
@@ -125,6 +131,74 @@ export const ServiceForm = ({ onSubmit, onCancel, isLoading = false, initialData
             )}
           </div>
 
+          {/* Location */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="location">
+                {t('filters.location')} <span className="text-red-500">*</span>
+              </Label>
+              <Controller
+                name="location"
+                control={control}
+                rules={{ required: t('common.required') }}
+                render={({ field }) => (
+                  <Select 
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setSelectedLocation(value);
+                    }} 
+                    value={field.value}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder={t('filters.selectRegion')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {KYRGYZSTAN_REGIONS.filter(loc => loc.id !== 'all').map((location) => (
+                        <SelectItem key={location.id} value={location.id}>
+                          <span className="flex items-center gap-2">
+                            <span>{location.emoji}</span>
+                            <span>{t(`locations.${location.id}`)}</span>
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.location && (
+                <p className="text-red-500 text-sm mt-1">{errors.location.message}</p>
+              )}
+            </div>
+
+            <div>
+              <Label htmlFor="district">
+                {t('filters.district')}
+              </Label>
+              <Controller
+                name="district"
+                control={control}
+                render={({ field }) => (
+                  <Select 
+                    onValueChange={field.onChange} 
+                    value={field.value}
+                    disabled={!selectedLocation}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder={t('filters.selectDistrict')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {selectedLocation && KYRGYZSTAN_REGIONS.find(loc => loc.id === selectedLocation)?.districts.map((district) => (
+                        <SelectItem key={district.id} value={district.id}>
+                          {district.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
+          </div>
+
           {/* Price */}
           <div>
             <Label htmlFor="price">
@@ -191,66 +265,50 @@ export const ServiceForm = ({ onSubmit, onCancel, isLoading = false, initialData
 
           {/* Images */}
           <div>
-            <Label>{t('services.form.images')}</Label>
-            <div className="mt-2 space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {selectedImages.map((image, index) => (
-                  <div key={index} className="relative aspect-square group">
-                    <img
-                      src={URL.createObjectURL(image)}
-                      alt={`Upload ${index + 1}`}
-                      className="w-full h-full object-cover rounded-lg"
-                    />
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
-                    <button
-                      type="button"
-                      onClick={() => removeImage(index)}
-                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-red-500 rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50"
-                      title={t('services.form.removeImage')}
-                    >
-                      <X className="h-5 w-5" />
-                    </button>
+            <Label htmlFor="images">
+              {t('services.form.images')} <span className="text-red-500">*</span>
+            </Label>
+            <div className="mt-1">
+              <div className="flex items-center justify-center w-full">
+                <label
+                  htmlFor="image-upload"
+                  className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+                >
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <Upload className="w-8 h-8 mb-4 text-gray-500" />
+                    <p className="mb-2 text-sm text-gray-500">
+                      <span className="font-semibold">{t('services.form.dragAndDrop')}</span>
+                    </p>
+                    <p className="text-xs text-gray-500">{t('services.form.fileTypes')}</p>
                   </div>
-                ))}
-                {selectedImages.length < 5 && (
-                  <label className="border-2 border-dashed border-gray-300 rounded-lg aspect-square flex flex-col items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition-colors relative group">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={handleImageUpload}
-                      className="hidden"
-                    />
-                    <div className="flex flex-col items-center space-y-2 px-4">
-                      <div className="p-2 bg-gray-100 rounded-full group-hover:bg-gray-200 transition-colors">
-                        <Upload className="h-6 w-6 text-gray-600" />
-                      </div>
-                      <span className="text-sm text-gray-600 text-center font-medium">
-                        {t('services.form.addImages')}
-                      </span>
-                      <span className="text-xs text-gray-500 text-center">
-                        {t('services.form.maxImages')}
-                      </span>
-                    </div>
-                  </label>
-                )}
+                  <input
+                    id="image-upload"
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                  />
+                </label>
               </div>
               {selectedImages.length > 0 && (
-                <div className="flex items-center justify-between text-sm text-gray-500">
-                  <span>
-                    {selectedImages.length} / 5 {t('services.form.imagesSelected')}
-                  </span>
-                  {selectedImages.length > 0 && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setSelectedImages([])}
-                      className="text-red-500 hover:text-red-600 hover:bg-red-50"
-                    >
-                      {t('services.form.clearImages')}
-                    </Button>
-                  )}
+                <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {selectedImages.map((file, index) => (
+                    <div key={index} className="relative">
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={`Preview ${index + 1}`}
+                        className="w-full h-32 object-cover rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>

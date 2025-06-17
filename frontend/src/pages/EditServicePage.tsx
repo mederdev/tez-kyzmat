@@ -6,7 +6,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Service, ServiceFormData } from '@/types';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuthContext } from '@/contexts/AuthContext';
 import { useEffect } from 'react';
 
 export function EditServicePage() {
@@ -14,7 +14,7 @@ export function EditServicePage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user } = useAuthContext();
 
   const { data: service, isLoading, error } = useQuery<Service>({
     queryKey: ['service', id],
