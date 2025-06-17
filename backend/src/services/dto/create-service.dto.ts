@@ -6,9 +6,42 @@ import {
   IsBoolean,
   Length,
   MaxLength,
+  ValidateIf,
+  Matches,
+  Validate,
 } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { ServiceCategory } from "../entities/service.entity";
+
+const LOCATIONS = [
+  "bishkek",
+  "osh",
+  "chui",
+  "issyk-kul",
+  "naryn",
+  "talas",
+  "jalal-abad",
+  "osh-region",
+  "batken",
+] as const;
+
+export const DISTRICTS = {
+  bishkek: ["leninsky", "oktyabrsky", "pervomaysky", "sverdlovsky"],
+  osh: ["alay", "kara-su", "nookat", "uzgen"],
+  chui: ["alamedin", "chuy", "kemin", "moskovsky", "panfilov", "sokuluk", "ysyk-ata"],
+  "issyk-kul": ["ak-suu", "jety-oguz", "ton", "tyup"],
+  naryn: ["ak-talaa", "at-bashy", "jumgal", "kochkor", "naryn"],
+  talas: ["baka-aygyr", "kara-buura", "manas", "talas"],
+  "jalal-abad": ["aksi", "ala-buka", "bazar-korgon", "chatkal", "nooken", "suzak", "toktogul"],
+  "osh-region": ["alay", "ara-van", "kara-kulja", "kara-su", "nookat", "uzgen"],
+  batken: ["batken", "kadamjay", "leylek"],
+} as const;
+
+// Custom validator for district
+function validateDistrict(value: string, location: string): boolean {
+  if (!location || !DISTRICTS[location]) return false;
+  return DISTRICTS[location].includes(value);
+}
 
 export class CreateServiceDto {
   @ApiProperty({
@@ -61,27 +94,22 @@ export class CreateServiceDto {
   @ApiProperty({
     description: "WhatsApp номер",
     example: "+996700123456",
-    pattern: "^\\+996[0-9]{9}$",
+    pattern: "^\\+?996[0-9]{9}$",
   })
-  @IsPhoneNumber("KG", { message: "Неверный формат номера WhatsApp" })
+  @IsString({ message: "Номер WhatsApp должен быть строкой" })
+  @Matches(/^\+?996[0-9]{9}$/, { message: "Неверный формат номера WhatsApp. Пример: +996700123456" })
   whatsapp: string;
 
   @ApiProperty({
     description: "Код региона",
     example: "bishkek",
-    enum: [
-      "bishkek",
-      "osh",
-      "chui",
-      "issyk-kul",
-      "naryn",
-      "talas",
-      "jalal-abad",
-      "osh-region",
-      "batken",
-    ],
+    enum: LOCATIONS,
   })
   @IsString({ message: "Локация должна быть строкой" })
+  @Matches(
+    new RegExp(`^(${LOCATIONS.join("|")})$`),
+    { message: "Неверный код региона" }
+  )
   location: string;
 
   @ApiProperty({
@@ -92,22 +120,20 @@ export class CreateServiceDto {
   locationName: string;
 
   @ApiProperty({
-    description: "Код района (опционально)",
+    description: "Код района",
     example: "leninsky",
-    required: false,
   })
-  @IsOptional()
   @IsString({ message: "Район должен быть строкой" })
-  district?: string;
+  @ValidateIf((o: CreateServiceDto) => Boolean(o.location))
+  district: string;
 
   @ApiProperty({
-    description: "Название района (опционально)",
+    description: "Название района",
     example: "Ленинский район",
-    required: false,
   })
-  @IsOptional()
   @IsString({ message: "Название района должно быть строкой" })
-  districtName?: string;
+  @ValidateIf((o: CreateServiceDto) => Boolean(o.district))
+  districtName: string;
 
   @ApiProperty({
     description: "Цена за услугу",

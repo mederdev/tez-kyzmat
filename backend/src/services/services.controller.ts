@@ -13,6 +13,8 @@ import {
   ParseBoolPipe,
   UploadedFiles,
   UseInterceptors,
+  BadRequestException,
+  ValidationPipe,
 } from "@nestjs/common";
 import { ThrottlerGuard } from "@nestjs/throttler";
 import {
@@ -28,7 +30,7 @@ import {
 } from "@nestjs/swagger";
 
 import { ServicesService, ServiceFilters } from "./services.service";
-import { CreateServiceDto } from "./dto/create-service.dto";
+import { CreateServiceDto, DISTRICTS } from "./dto/create-service.dto";
 import { UpdateServiceDto } from "./dto/update-service.dto";
 import { ServiceCategory } from "./entities/service.entity";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
@@ -43,8 +45,6 @@ export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth("JWT-auth")
   @ApiOperation({
     summary: "Создание объявления",
     description:
@@ -89,7 +89,16 @@ export class ServicesController {
       example: {
         success: false,
         message: "Validation failed",
-        errors: ["name должно быть строкой"],
+        errors: [
+          {
+            field: "name",
+            message: "Название должно быть от 3 до 255 символов"
+          },
+          {
+            field: "contact",
+            message: "Неверный формат номера телефона"
+          }
+        ]
       },
     },
   })
@@ -105,16 +114,85 @@ export class ServicesController {
     },
   })
   async create(
-    @Body() createServiceDto: CreateServiceDto,
+    @Body(new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      stopAtFirstError: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+      exceptionFactory: (errors) => {
+        const error = errors[0]; // Get only the first error
+        let message = Object.values(error.constraints)[0];
+
+        // Special handling for location and district
+        if (error.property === 'district' && error.target) {
+          const location = (error.target as any).location;
+          if (!location) {
+            message = 'Сначала выберите регион';
+          } else if (!DISTRICTS[location]?.includes(error.value)) {
+            message = `Неверный район для региона ${location}`;
+          }
+        }
+
+        // Special handling for WhatsApp number
+        if (error.property === 'whatsapp') {
+          if (!error.value.startsWith('+')) {
+            message = 'Номер WhatsApp должен начинаться с +996';
+          }
+        }
+
+        return new BadRequestException({
+          success: false,
+          message: "Validation failed",
+          errors: [{
+            field: error.property,
+            message: message
+          }]
+        });
+      }
+    })) createServiceDto: CreateServiceDto,
     @Request() req: any
   ) {
     // Получаем файлы из multipart запроса
     const files = await this.extractFiles(req);
 
+    // Validate images
+    if (files && files.length > 5) {
+      throw new BadRequestException({
+        success: false,
+        message: "Validation failed",
+        errors: [{
+          field: "images",
+          message: "Максимальное количество изображений - 5"
+        }]
+      });
+    }
+
+    // Validate district
+    if (createServiceDto.location && createServiceDto.district) {
+      if (!DISTRICTS[createServiceDto.location]?.includes(createServiceDto.district)) {
+        throw new BadRequestException({
+          success: false,
+          message: "Validation failed",
+          errors: [{
+            field: "district",
+            message: `Неверный район для региона ${createServiceDto.location}`
+          }]
+        });
+      }
+    }
+
+    // Format WhatsApp number if needed
+    if (createServiceDto.whatsapp && !createServiceDto.whatsapp.startsWith('+')) {
+      createServiceDto.whatsapp = `+${createServiceDto.whatsapp}`;
+    }
+
     const service = await this.servicesService.create(
       createServiceDto,
       files,
-      req.user.id
+      req.user?.id
     );
 
     return {

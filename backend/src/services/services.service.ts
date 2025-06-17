@@ -34,7 +34,7 @@ export class ServicesService {
   async create(
     createServiceDto: CreateServiceDto,
     files: any[],
-    userId: string
+    userId?: string
   ): Promise<Service> {
     // Загружаем изображения
     const images = await this.fileUploadService.uploadImages(files);
@@ -43,7 +43,7 @@ export class ServicesService {
     const service = this.servicesRepository.create({
       ...createServiceDto,
       images,
-      ownerId: userId,
+      ownerId: userId || null,
     });
 
     return this.servicesRepository.save(service);
